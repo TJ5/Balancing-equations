@@ -1,42 +1,64 @@
 package balancingEquations;
-import java.util.ArrayList;
+
 public class Element {
 	public boolean balanced;
-	public int totalL;
-	public int totalR;
-	public String chemSymbol;
-	public static ArrayList<Element> elements = new ArrayList<Element>();
 	
+	public String chemSymbol;
+	public Equation equation;
+	public int count;
+	public Compound compound;
 	public boolean checkIfBalanced() {
-		if (this.totalL == this.totalR) {
+		if (this.getNumberOf('l') == this.getNumberOf('r')) {
 			this.balanced = true;
 			return true;
 		}
 		return false;
 		
 	}
-	public static boolean totalBalanced() {
-		boolean balanced;
-		for (int i = 0; i < Element.elements.size(); i++) {
-			if (Element.elements.get(i).checkIfBalanced() == false) {
-				return balanced = false;
+	public int getNumberOf(char side) {
+		int total = 0;
+		int sizeCompounds = equation.LCompounds.size();
+		
+		if (side == 'l') {
+			for (int i = 0; i < equation.LCompounds.size(); i++) {
+				int sizeElements = equation.LCompounds.get(i).elements.size();
+				for (int x = 0; x < equation.LCompounds.get(i).elements.size(); x++) {
+					if (this.equals(equation.LCompounds.get(i).elements.get(x))) {
+						total += (equation.LCompounds.get(i).coefficient * equation.LCompounds.get(i).elements.get(x).count);
+					}
+				}
+			}
+		
+		}
+		else {
+			for (int i = 0; i < equation.RCompounds.size(); i++) {
+				for (int x = 0; x < equation.RCompounds.get(i).elements.size(); x++) {
+					if (this.equals(equation.RCompounds.get(i).elements.get(x))) {
+		
+						total += (equation.RCompounds.get(i).coefficient * equation.RCompounds.get(i).elements.get(x).count);		
+					}
+				}
 			}
 		}
-		
-		
-		return balanced = true;
+				
+		return total;
 	}
-	public Element(int totalL, int totalR, String chemSymbol) {
-		this.totalL = totalL;
-		this.totalR = totalR;
+	
+	public Element(String chemSymbol, Equation equation, Compound compound, int count) {
+		
 		this.chemSymbol = chemSymbol; 
-		Element.elements.add(this);
-		if (totalL == totalR) {
+		this.equation = equation;
+		this.compound = compound;
+		this.count = count;
+		compound.elements.add(this);
+		equation.elements.add(this);
+		if (this.getNumberOf('l') == this.getNumberOf('r')) {
 			this.balanced = true;
 		}
 		else {
 			this.balanced = false;
 		}
+		
 		
 	}
 	public boolean equals(Element element) {
@@ -45,33 +67,5 @@ public class Element {
 		}
 		return false;
 	}
-	public static void balance() {
-		int placeholder = 0;
-		System.out.println(!(Element.elements.get(placeholder).balanced));
-		while (!(Element.totalBalanced())) {
-			for (int i = 0; i < elements.size(); i++) {
-				
-				if (elements.get(i).checkIfBalanced() == false) {
-					int balanced = MathFunctions.lcm(elements.get(i).totalL, elements.get(i).totalR);
-					int Rmultiplier = balanced / elements.get(i).totalR;
-					int Lmultiplier = balanced / elements.get(i).totalL;
-					ArrayList<Compound> Rcompounds = Compound.findCompounds('r', elements.get(i));
-					ArrayList<Compound> Lcompounds = Compound.findCompounds('l', elements.get(i));
-					
-					for (int x = 0; x < Rcompounds.size(); x++) {
-						Rcompounds.get(x).coefficient*=Rmultiplier;
-						elements.get(i).totalR*=Rmultiplier;
-						System.out.println(Rcompounds.get(x).coefficient);
-					}
-					for (int y = 0; y < Lcompounds.size(); y++) {
-						Lcompounds.get(y).coefficient*=Lmultiplier;
-						elements.get(i).totalL*=Lmultiplier;
-						System.out.println(Lcompounds.get(y).coefficient);
-					}
-				}
-				
-			}
-			placeholder++;
-		}
-	}
+	
 }
