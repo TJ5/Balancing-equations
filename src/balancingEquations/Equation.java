@@ -14,6 +14,7 @@ public class Equation {
 			for (int i = 0; i < elements.size(); i++) {
 				
 				if (elements.get(i).checkIfBalanced() == false) {
+					String test = elements.get(i).chemSymbol;
 					int balanced = MathFunctions.lcm(elements.get(i).getNumberOf('l'), elements.get(i).getNumberOf('r'));
 					int Rmultiplier = balanced / elements.get(i).getNumberOf('r');
 					
@@ -22,7 +23,7 @@ public class Equation {
 					ArrayList<Compound> Lresults = this.findCompounds('l', elements.get(i));
 					
 					for (int x = 0; x < Rresults.size(); x++) {
-						Rresults.get(x).coefficient*=Rmultiplier;
+					Rresults.get(x).coefficient*=Rmultiplier;
 						
 						
 						
